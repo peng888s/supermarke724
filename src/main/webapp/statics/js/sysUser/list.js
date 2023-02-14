@@ -47,11 +47,11 @@ $(function(){
 	 * bind、live、delegate
 	 * on
 	 */
-    // $(".viewUser").on("click",function(){
-    //     //将被绑定的元素（a）转换成jquery对象，可以使用jquery方法
-    //     var obj = $(this);
-    //     window.location.href=path+"/sys/user/view/" + obj.attr("userid");
-    // });
+    $(".viewUser").on("click",function(){
+        //将被绑定的元素（a）转换成jquery对象，可以使用jquery方法
+        var obj = $(this);
+        // window.location.href=path+"/sys/user/view/" + obj.attr("userid");
+    });
     $(".viewUser").on("click",function(){
         //将被绑定的元素（a）转换成jquery对象，可以使用jquery方法
         var obj = $(this);
@@ -79,7 +79,7 @@ $(function(){
                     $("#v_birthday").val(result.birthday);
                     $("#v_phone").val(result.phone);
                     $("#v_address").val(result.address);
-                    $("#v_roleIdName").val(result.roleIdName);
+                    $("#v_roleIdName").val(result.sysRole.roleName);
                     $("#v_createdTime").val(result.createdTime);
                 }
 
