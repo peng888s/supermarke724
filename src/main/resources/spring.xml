@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--    扫描组件，除控制层-->
+    <context:component-scan base-package="com.supermarke.ssm">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+<!--    引入外部属性文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+<!--    配置druid数据源-->
+<!--    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource">-->
+<!--        <property name="driverClassName" value="${jdbc.driver}"/>-->
+<!--        <property name="url" value="${jdbc.url}"/>-->
+<!--        <property name="username" value="${jdbc.username}"/>-->
+<!--        <property name="password" value="${jdbc.password}"/>-->
+<!--    </bean>-->
+
+    <bean id="druidDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jdbc/cvs_db"/>
+    </bean>
+<!--    配置事务管理器-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="druidDataSource"/>
+    </bean>
+<!--    开启注解事务驱动-->
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+
+<!--    配置SqlSessionFactoryBean-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="druidDataSource"/>
+<!--        设置当前mybatis核心配置文件的路径-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+<!--        设置别名-->
+        <property name="typeAliasesPackage" value="com.supermarke.ssm.pojo"/>
+<!--        设置映射文件路径，只有映射文件的包和mapper文件接口的包不一致，时需要设置-->
+<!--        <property name="mapperLocations" value="classpath:mappers/*.xml"/>-->
+    </bean>
+
+<!--    配置mapper接口的扫描，可以将当前指定包下所有的mapper接口，通过SqlSession创建代理实现类，并将这些对象交给IoC容器管理-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.supermarke.ssm.mapper"/>
+    </bean>
+</beans>

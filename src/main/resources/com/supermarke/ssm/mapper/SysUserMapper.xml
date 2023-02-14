@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.supermarke.ssm.mapper.SysUserMapper">
+    <select id="loginJudgment" resultType="sysuser">
+        select * from t_sys_user where account = #{username} and password = #{password}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from `t_sys_user`
+    </select>
+
+    <select id="selectByAll" resultType="sysuser" parameterType="list">
+        select * from `t_sys_user`
+    </select>
+<!--    模糊查询-->
+    <select id="getUsersByRealName" resultType="sysuser">
+        select * from `t_sys_user` where realName like concat('%',#{param},'%')
+    </select>
+
+<!--    多条件查询用户列表-->
+    <select id="getUserListByPojo" resultType="sysuser">
+        select * from `t_sys_user` where realName like concat('%',#{realName},'%') and roleId = #{roleId}
+    </select>
+
+<!--    Map集合-->
+    <select id="getUserListByMap" resultType="sysuser">
+        select * from `t_sys_user` where realName like concat('%',#{realName},'%') and roleId = #{roleId}
+    </select>
+
+<!--    使用注解-->
+    <select id="getUserListByParams" resultType="sysuser">
+        select * from `t_sys_user`
+        <trim prefix="where" prefixOverrides="and|or">
+<!--             <where>-->
+                 <if test="realName != null and realName != ''">
+                     and realName like concat('%',#{realName},'%')
+                 </if>
+                 <if test="roleId != null and roleId != ''">
+                     and roleId = #{roleId}
+                 </if>
+<!--             </where>-->
+        </trim>
+    </select>
+    <select id="getAccount" resultType="SysUser">
+        SELECT * FROM `t_sys_user` where account = #{account}
+    </select>
+<!--     结果映射-->
+    <select id="getUserListWithRoleName" resultMap="UserList">
+        SELECT * FROM `t_sys_user`
+        <where>
+            <if test="roleId != null and roleId != ''">and roleId = #{roleId}</if>
+            <if test="realName != null and realName != ''">  and realName like concat('%',#{realName},'%')</if>
+        </where>
+    </select>
+    <resultMap id="UserList" type="SysUser">
+        <id property="id" column="id"/>
+        <association property="sysRole" select="com.supermarke.ssm.mapper.SysRoleMapper.selectByAllId" column="roleId" fetchType="lazy"/>
+    </resultMap>
+
+<!--    据用户ID查询用户及相关地址-->
+    <select id="getUserAddressesByUserId" resultMap="UserList">
+        SELECT * FROM `t_sys_user` where id = #{userId}
+    </select>
+
+    <resultMap id="UserListAddress" type="SysUser">
+        <id property="id" column="id"/>
+        <association property="addressList" select="com.mybatis.mapper.AddressMapper.selectByUserId" column="id" fetchType="lazy"/>
+    </resultMap>
+
+<!--    添加用户-->
+    <insert id="add" parameterType="SysUser">
+        insert into t_sys_user values (
+            #{id},#{account},#{realName},#{password},#{sex},#{birthday},#{phone},
+            #{address},#{roleId},#{createdUserId},#{createdTime},#{updatedUserId},#{updatedTime}
+            ,#{idPicPath}
+        )
+    </insert>
+
+<!--    修改用户-->
+    <update id="modify">
+        update t_sys_user
+        <set>
+            <if test="account != null and account != ''">account = #{account},</if>
+            <if test="realName != null and realName != ''">realName = #{realName},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="birthday != null and birthday != ''">birthday = #{birthday},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="roleId != null and roleId != ''">roleId = #{roleId},</if>
+            <if test="createdUserId != null and createdUserId != ''">createdUserId = #{createdUserId},</if>
+            <if test="createdTime != null">createdTime = #{createdTime},</if>
+            <if test="updatedUserId != null and updatedUserId != ''">updatedUserId = #{updatedUserId},</if>
+            <if test="updatedTime != null">updatedTime = #{updatedTime},</if>
+            <if test="idPicPath != null and idPicPath != ''">idPicPath = #{idPicPath},</if>
+        </set>
+        where id =#{id}
+    </update>
+
+    <delete id="deleteUserById">
+        delete from t_sys_user where id = #{id}
+    </delete>
+
+    <select id="selectListByChoose" resultType="SysUser">
+        select * from t_sys_user
+            <where>
+                <choose>
+                    <when test="realName != null and realName != ''">
+                        and realName like concat ('%',#{realName},'%')
+                    </when>
+                    <when test="roleId != null and roleId != ''">
+                        and roleId = #{roleId}
+                    </when>
+                    <when test="account != null and account != ''">
+                        and account like CONCAT ('%',#{account},'%')
+                    </when>
+                    <otherwise>
+                        and YEAR(createdTime) = YEAR(#{createdTime})
+                    </otherwise>
+                </choose>
+            </where>
+    </select>
+
+<!--     List<SysUser> getUserByRoleIdArray(Integer[] roleIds);-->
+    <select id="getUserByRoleIdArray" resultType="SysUser">
+        select * from t_sys_user where roleId in
+            <foreach collection="array" item="roleId" separator="," open="(" close=")">
+                #{roleId}
+            </foreach>
+    </select>
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.supermarke.ssm.mapper.SupplierMapper">
+    <select id="selectAll" resultType="Supplier">
+        select * from t_supplier
+    </select>
+
+    <select id="selectById" resultType="Supplier">
+        SELECT * FROM `t_supplier` WHERE id =#{id}
+    </select>
+
+    <select id="selectByIdMap" resultType="Supplier">
+        SELECT * FROM `t_supplier`
+        <where>
+            <if test="querySupCode != null and querySupCode != ''">and supCode LIKE "%"#{querySupCode}"%"</if>
+            <if test="querySupName != null and querySupName != ''">and supName LIKE "%"#{querySupName}"%"</if>
+        </where>
+    </select>
+    <resultMap id="bySupplierId" type="Supplier">
+        <id property="id" column="id"/>
+        <collection property="storageRecords" column="id"
+                     select="com.mybatis.mapper.StorageRecordMapper.selectBySupplierId"/>
+    </resultMap>
+
+    <update id="update">
+        update `t_supplier`
+            <set>
+                <if test="supCode != null and supCode != ''">,supCode = #{supCode}</if>
+                <if test="supName != null and supName != ''">,supName = #{supName}</if>
+                <if test="supDesc != null and supDesc != ''">,supDesc = #{supDesc}</if>
+                <if test="supContact != null and supContact != ''">,supContact = #{supContact}</if>
+                <if test="supPhone != null and supPhone != ''">,supPhone = #{supPhone}</if>
+                <if test="supAddress != null and supAddress != ''">,supAddress = #{supAddress}</if>
+                <if test="supFax != null and supFax != ''">,supFax = #{supFax}</if>
+                <if test="createdUserId != null and createdUserId != ''">,createdUserId = #{createdUserId}</if>
+                <if test="createdTime != null">,createdTime = #{createdTime}</if>
+                <if test="updatedUserId != null and updatedUserId != ''">,updatedUserId = #{updatedUserId}</if>
+                <if test="updatedTime != null">,updatedTime = #{updatedTime}</if>
+            </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from `t_supplier` WHERE id = #{id}
+    </delete>
+
+    <insert id="insert">
+        insert  into `t_supplier`
+        (`id`,`supCode`,`supName`,`supDesc`,`supContact`,`supPhone`,`supAddress`,`supFax`,`createdUserId`,`createdTime`,`updatedUserId`,`updatedTime`)
+        values
+        (null,#{supCode},#{supName},#{supDesc},#{supContact},#{supPhone},#{supAddress},#{supFax},1,#{createdUserId},null,null)
+    </insert>
+</mapper>

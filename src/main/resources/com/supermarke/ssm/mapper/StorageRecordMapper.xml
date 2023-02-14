@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.supermarke.ssm.mapper.StorageRecordMapper">
+    <insert id="insert">
+        insert  into `t_storage_record`
+        (`id`,`srCode`,`GoodsName`,`goodsDesc`,totalAmount,`goodsUnit`,`goodsCount`,`payStatus`,`createdUserId`,`createdTime`,`updatedUserId`,`updatedTime`,`supplierId`)
+        values
+        (null,#{srCode},#{goodsName},#{goodsDesc},#{totalAmount},#{goodsUnit},#{goodsCount},#{payStatus},#{createdUserId},#{createdTime},NULL,NULL,#{supplierId})
+    </insert>
+
+    <select id="selectByNameOrIdOrType" resultMap="NameOrIdOrType">
+        SELECT
+            id,`GoodsName`,`supplierId`,`totalAmount`,`payStatus`,`createdTime`,`srCode`
+        FROM t_storage_record
+            where 1=1
+                <if test="goodsName != null and goodsName != ''">
+                    and GoodsName like concat('%',#{goodsName},'%')
+                </if>
+                <if test="supplierId != null and supplierId != ''">
+                    and supplierId = #{supplierId}
+                </if>
+              <if test="payStatus != null and payStatus != ''">
+                  and payStatus=#{payStatus}
+              </if>
+    </select>
+
+    <resultMap id="NameOrIdOrType" type="StorageRecord">
+        <id column="id" property="id"/>
+        <result property="goodsName" column="GoodsName"/>
+        <result property="supplierId" column="supplierId"/>
+        <result property="totalAmount" column="totalAmount"/>
+        <result property="payStatus" column="payStatus"/>
+        <result property="createdTime" column="createdTime"/>
+        <association property="supplier" select="com.supermarke.ssm.mapper.SupplierMapper.selectById" column="supplierId" fetchType="lazy"/>
+    </resultMap>
+
+    <select id="selectBySupplierId" resultMap="NameOrIdOrType">
+        SELECT  *   FROM t_storage_record
+            <where>
+                <if test="id != null and id != ''">id = #{id}</if>
+            </where>
+    </select>
+
+    <update id="updateById">
+        update t_storage_record
+            <set>
+                <if test="srCode != null and srCode != ''">,srCode = #{srCode}</if>
+                <if test="goodsName != null and goodsName != ''">,goodsName = #{goodsName}</if>
+                <if test="goodsDesc != null and goodsDesc != ''">,goodsDesc = #{goodsDesc}</if>
+                <if test="goodsUnit != null and goodsUnit != ''">,goodsUnit = #{goodsUnit}</if>
+                <if test="goodsCount != null and goodsCount != ''">,goodsCount = #{goodsCount}</if>
+                <if test="totalAmount != null and totalAmount != ''">,totalAmount = #{totalAmount}</if>
+                <if test="payStatus != null and payStatus != ''">,payStatus = #{payStatus}</if>
+                <if test="createdUserId != null and createdUserId != ''">,createdUserId = #{createdUserId}</if>
+                <if test="createdTime != null">,createdTime = #{createdTime}</if>
+                <if test="updatedUserId != null and updatedUserId != ''">,updatedUserId = #{updatedUserId}</if>
+                <if test="updatedTime != null">,updatedTime = #{updatedTime}</if>
+                <if test="supplierId != null and supplierId != ''">,supplierId = #{supplierId}</if>
+            </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBySrCode">
+        delete
+        from t_storage_record
+        where id = #{id}
+    </delete>
+
+    <select id="count" resultType="Long">
+        SELECT COUNT(0) FROM t_storage_record WHERE 1 = 1
+    </select>
+
+    <select id="selectGetBySupplierId" resultType="StorageRecord">
+        SELECT  *   FROM t_storage_record
+        <where>
+            <if test="supplierId != null and supplierId != ''">supplierId = #{supplierId}</if>
+        </where>
+    </select>
+</mapper>

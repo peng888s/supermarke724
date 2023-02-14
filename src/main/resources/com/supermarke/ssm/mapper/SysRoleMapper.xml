@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.supermarke.ssm.mapper.SysRoleMapper">
+    <select id="selectByAllId" resultType="SysRole">
+        SELECT * FROM `t_sys_role` WHERE `id` = #{roleId}
+    </select>
+
+    <select id="selectCode" resultType="SysRole">
+        SELECT * FROM `t_sys_role` WHERE `code` = #{code}
+    </select>
+
+    <select id="selectAll" resultType="sysRole">
+        SELECT * FROM `t_sys_role`
+    </select>
+
+    <update id="update">
+        update `t_sys_role`
+        <set>
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="roleName != null and roleName != ''">roleName = #{roleName},</if>
+            <if test="createdUserId != null and createdUserId != ''">createdUserId = #{createdUserId},</if>
+            <if test="createdTime != null and createdTime != ''">createdTime = #{createdTime},</if>
+            <if test="updatedUserId != null and updatedUserId != ''">updatedUserId = #{updatedUserId},</if>
+            <if test="updatedTime != null and updatedTime != ''">updatedTime = #{updatedTime},</if>
+        </set>
+            where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from `t_sys_role` where id = #{id}
+    </delete>
+
+    <insert id="insert">
+        insert  into `t_sys_role`
+            (`id`,`code`,`roleName`,`createdUserId`,`createdTime`,`updatedUserId`,`updatedTime`)
+        values
+            (null,#{code},#{roleName},#{createdUserId},#{createdTime},null,NULL)
+    </insert>
+</mapper>
