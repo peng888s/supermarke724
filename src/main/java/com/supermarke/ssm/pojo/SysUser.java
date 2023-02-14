@@ -1,5 +1,8 @@
 package com.supermarke.ssm.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,11 +13,14 @@ public class SysUser {
   private String realName;
   private String password;
   private Integer sex;
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  @JSONField(format = "yyyy-MM-dd")
   private Date birthday;
   private String phone;
   private String address;
   private Integer roleId;
   private Long createdUserId;
+  @JSONField(format = "yyyy-MM-dd HH:mm:ss")
   private Date createdTime;
   private Long updatedUserId;
   private Date updatedTime;
