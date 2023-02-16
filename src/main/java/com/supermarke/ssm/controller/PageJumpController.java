@@ -48,7 +48,7 @@ public class PageJumpController {
         if (login != null) {
             if (login.getPassword().equals(password)){
                 session.setAttribute("userSession",login);
-                session.setMaxInactiveInterval(60*60*7*24);
+//                session.setMaxInactiveInterval(60*60*7*24);
                 return "redirect:/frame";
             }else {
                 throw new RuntimeException("密码输入错误❌");
@@ -123,7 +123,7 @@ public class PageJumpController {
         return "sysUser/updatePassword";
     }
 
-    // 退出
+    // 退出`
     @RequestMapping("/logout")
     public String index(HttpSession session){
         session.removeAttribute("userSession");

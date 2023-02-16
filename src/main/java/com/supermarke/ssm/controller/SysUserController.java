@@ -2,6 +2,7 @@ package com.supermarke.ssm.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.sun.deploy.util.StringUtils;
 import com.supermarke.ssm.mapper.SysUserMapper;
 import com.supermarke.ssm.pojo.SysRole;
 import com.supermarke.ssm.pojo.SysUser;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -128,12 +130,20 @@ public class SysUserController {
     }
 
     @RequestMapping("/savePassword")
-    public String savePassword(@RequestParam String reNewPassword,HttpSession session){
-        SysUser userSession = (SysUser) session.getAttribute("userSession");
-        SysUser sysUser = new SysUser();
-        sysUser.setId(userSession.getId());
-        sysUser.setPassword(reNewPassword);
-        boolean update = sysUserService.update(sysUser);
+    public String savePassword(@RequestParam String reNewPassword, HttpSession session, HttpServletRequest request){
+        if (session.getAttribute("userSession") != null){
+            SysUser userSession = (SysUser) session.getAttribute("userSession");
+            SysUser sysUser = new SysUser();
+            sysUser.setId(userSession.getId());
+            sysUser.setPassword(reNewPassword);
+            boolean update = sysUserService.update(sysUser);
+            if (update){
+                session.removeAttribute("userSession");
+                return "redirect:/login";
+            }
+        }else {
+            request.setAttribute("userSession","修改密码失败");
+        }
         return "redirect:/sys/user/list/1";
     }
 
@@ -141,14 +151,13 @@ public class SysUserController {
     @ResponseBody
     public String checkOldPwd(@RequestParam("oldPassword")String oldPassword,HttpSession session){
         SysUser userSession = (SysUser) session.getAttribute("userSession");
-        if (oldPassword.equals(userSession.getPassword()))
-            return "true";
-        if (!oldPassword.equals(userSession.getPassword()))
-            return "false";
-        if (oldPassword == "")
-            return "error";
-        if (userSession == null)
+        if (session.getAttribute("userSession") != null){
+            if (oldPassword.equals(userSession.getPassword())) return "true";
+            if (!oldPassword.equals(userSession.getPassword())) return "false";
+            if (oldPassword == "") return "error";
+        }else {
             return "sessionerror";
+        }
         return "500";
     }
 

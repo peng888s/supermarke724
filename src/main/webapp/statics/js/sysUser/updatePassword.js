@@ -20,9 +20,9 @@ $(function(){
 			data:{oldPassword:oldpassword.val()},
 			// dataType:"json",
 			success:function(data){
-				if(data == "true"){//旧密码正确
+				if(data.result == "true"){//旧密码正确
 					validateTip(oldpassword.next(),{"color":"green"},imgYes,true);
-				}else if(data == "false"){//旧密码输入不正确
+				}else if(data.result == "false"){//旧密码输入不正确
 					validateTip(oldpassword.next(),{"color":"red"},imgNo + " 原密码输入不正确",false);
 				}else if(data.result == "sessionerror"){//当前用户session过期，请重新登录
 					validateTip(oldpassword.next(),{"color":"red"},imgNo + " 当前用户session过期，请重新登录",false);
@@ -35,8 +35,8 @@ $(function(){
 				validateTip(oldpassword.next(),{"color":"red"},imgNo + " 请求错误",false);
 			}
 		});
-		
-		
+
+
 	}).on("focus",function(){
 		validateTip(oldpassword.next(),{"color":"#666666"},"* 请输入原密码",false);
 	});
