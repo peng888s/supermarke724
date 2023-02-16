@@ -6,6 +6,19 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 <!--    扫描层组件-->
     <context:component-scan base-package="com.supermarke.ssm.controller"/>
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"></mvc:annotation-driven>
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorParameter" value="true"></property>
+        <property name="favorPathExtension" value="true"></property>
+        <property name="defaultContentType" value="text/html"></property>
+        <property name="mediaTypes">
+            <value>
+                json = application/json
+                xml = application/xml
+                html = text/html
+            </value>
+        </property>
+    </bean>
 
     <!--视图解析器-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
