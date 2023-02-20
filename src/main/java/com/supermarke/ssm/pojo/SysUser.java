@@ -28,6 +28,8 @@ public class SysUser {
   private Date updatedTime;
   private String idPicPath;
 
+  private String workPicpath;
+
   private SysRole sysRole;
 
   private List<Address> addressList;
@@ -54,61 +56,6 @@ public class SysUser {
     this.addressList = addressList;
   }
 
-  public SysUser(Long id, String account, String realName, String password, Integer sex, Date birthday, String phone, String address, Integer roleId, Long createdUserId, Date createdTime, Long updatedUserId, Date updatedTime, String idPicPath) {
-    this.id = id;
-    this.account = account;
-    this.realName = realName;
-    this.password = password;
-    this.sex = sex;
-    this.birthday = birthday;
-    this.phone = phone;
-    this.address = address;
-    this.roleId = roleId;
-    this.createdUserId = createdUserId;
-    this.createdTime = createdTime;
-    this.updatedUserId = updatedUserId;
-    this.updatedTime = updatedTime;
-    this.idPicPath = idPicPath;
-  }
-
-  @Override
-  public String toString() {
-    return "SysUser{" +
-            "id=" + id +
-            ", account='" + account + '\'' +
-            ", realName='" + realName + '\'' +
-            ", password='" + password + '\'' +
-            ", sex=" + sex +
-            ", birthday=" + birthday +
-            ", phone='" + phone + '\'' +
-            ", address='" + address + '\'' +
-            ", roleId=" + roleId +
-            ", createdUserId=" + createdUserId +
-            ", createdTime=" + createdTime +
-            ", updatedUserId=" + updatedUserId +
-            ", updatedTime=" + updatedTime +
-            ", idPicPath='" + idPicPath + '\'' +
-            ", sysRole=" + sysRole +
-            ", addressList=" + addressList +
-            '}';
-  }
-
-  public List<Address> getAddressList() {
-    return addressList;
-  }
-
-  public void setAddressList(List<Address> addressList) {
-    this.addressList = addressList;
-  }
-
-  public SysRole getSysRole() {
-    return sysRole;
-  }
-
-  public void setSysRole(SysRole sysRole) {
-    this.sysRole = sysRole;
-  }
-
   public Long getId() {
     return id;
   }
@@ -119,6 +66,14 @@ public class SysUser {
 
   public String getAccount() {
     return account;
+  }
+
+  public String getWorkPicpath() {
+    return workPicpath;
+  }
+
+  public void setWorkPicpath(String workPicpath) {
+    this.workPicpath = workPicpath;
   }
 
   public void setAccount(String account) {
@@ -219,5 +174,21 @@ public class SysUser {
 
   public void setIdPicPath(String idPicPath) {
     this.idPicPath = idPicPath;
+  }
+
+  public SysRole getSysRole() {
+    return sysRole;
+  }
+
+  public void setSysRole(SysRole sysRole) {
+    this.sysRole = sysRole;
+  }
+
+  public List<Address> getAddressList() {
+    return addressList;
+  }
+
+  public void setAddressList(List<Address> addressList) {
+    this.addressList = addressList;
   }
 }

@@ -1,5 +1,6 @@
 package com.supermarke.ssm.controller;
 
+
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.sun.deploy.util.StringUtils;
@@ -8,10 +9,12 @@ import com.supermarke.ssm.pojo.SysRole;
 import com.supermarke.ssm.pojo.SysUser;
 import com.supermarke.ssm.service.SysRoleService;
 import com.supermarke.ssm.service.SysUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -104,12 +107,15 @@ public class SysUserController {
     }
 
     @RequestMapping("/add")
-    public String sysUserAdd(SysUser sysUser,HttpSession session){
+    public String sysUserAdd(SysUser sysUser, HttpServletRequest request, HttpSession session, @RequestParam(value = "idPic",required = false) MultipartFile[] attachs){
         sysUser.setCreatedTime(new Date());
         SysUser userSession = (SysUser) session.getAttribute("userSession");
         userSession.setCreatedUserId(userSession.getId());
-        sysUserService.insert(sysUser);
-        return "redirect:/sys/user/list/1";
+        String insert = sysUserService.insert(sysUser, attachs, request);
+        if (insert.equals("true")){
+            return "redirect:/sys/user/list/1";
+        }
+        return insert;
     }
 
     @ResponseBody
@@ -147,18 +153,30 @@ public class SysUserController {
         return "redirect:/sys/user/list/1";
     }
 
-    @RequestMapping("/checkOldPwd")
+    @RequestMapping("checkOldPwd")
     @ResponseBody
-    public String checkOldPwd(@RequestParam("oldPassword")String oldPassword,HttpSession session){
+    public Map<String,String> checkOldPwd(@RequestParam("oldPassword")String oldPassword,HttpSession session){
+        Map<String,String> map = new HashMap<>();
         SysUser userSession = (SysUser) session.getAttribute("userSession");
         if (session.getAttribute("userSession") != null){
-            if (oldPassword.equals(userSession.getPassword())) return "true";
-            if (!oldPassword.equals(userSession.getPassword())) return "false";
-            if (oldPassword == "") return "error";
+            if (oldPassword.equals(userSession.getPassword())) {
+                map.put("result","true");
+                return map;
+            }
+            if (!oldPassword.equals(userSession.getPassword())) {
+                map.put("result","false");
+                return map;
+            }
+            if (oldPassword == ""){
+                map.put("result","error");
+                return map;
+            }
         }else {
-            return "sessionerror";
+            map.put("result","sessionerror");
+            return map;
         }
-        return "500";
+        map.put("result","500");
+        return map;
     }
 
     @ResponseBody

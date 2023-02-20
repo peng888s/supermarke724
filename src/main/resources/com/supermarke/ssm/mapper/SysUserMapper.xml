@@ -72,9 +72,9 @@
 <!--    添加用户-->
     <insert id="add" parameterType="SysUser">
         insert into t_sys_user values (
-            #{id},#{account},#{realName},#{password},#{sex},#{birthday},#{phone},
-            #{address},#{roleId},#{createdUserId},#{createdTime},#{updatedUserId},#{updatedTime}
-            ,#{idPicPath}
+          #{id},#{account},#{realName},#{password},#{sex},#{birthday},#{phone},
+          #{address},#{roleId},#{createdUserId},#{createdTime},#{updatedUserId},#{updatedTime}
+          ,#{idPicPath},#{workPicpath}
         )
     </insert>
 

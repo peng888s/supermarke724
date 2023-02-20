@@ -12,11 +12,5 @@ import java.util.List;
 
 public class Test {
 
-    @org.junit.Test
-    public void test1(){
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring.xml");
-        SysUserService sysUserService = applicationContext.getBean("sysUserService", SysUserService.class);
-        SysUser sysUser = new SysUser(null,"tom","tom","121212",1,new Date(),"13828100918","河南",1,1L,new Date(),1L,new Date(),null);
-        sysUserService.insert(sysUser);
-    }
+
 }

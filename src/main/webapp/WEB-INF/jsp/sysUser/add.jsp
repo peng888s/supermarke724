@@ -72,7 +72,7 @@
             <div>
                 <input type="hidden" id="errorinfo_wp" value="${uploadWpError}"/>
                 <label for="workPic">工作证照片：</label>
-                <input type="file" name="workPic" id="workPic"/>
+                <input type="file" name="idPic" id="workPic"/>
                 <font color="red"></font>
             </div>
             <div class="supplierAddBtn">

@@ -5,11 +5,15 @@ import com.github.pagehelper.PageInfo;
 import com.supermarke.ssm.mapper.SysUserMapper;
 import com.supermarke.ssm.pojo.SysUser;
 import com.supermarke.ssm.service.SysUserService;
+import com.supermarke.ssm.util.UpploadPhoto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Service("sysUserService")
 public class SysUserServiceImpl implements SysUserService {
@@ -62,10 +66,26 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional
-    public void insert(SysUser sysUser) {
-        sysUserMapper.add(sysUser);
-//        if (1==1){
-//            throw new RuntimeException("事务回滚时：");
-//        }
+    public String insert(SysUser sysUser, MultipartFile[] file, HttpServletRequest request) {
+
+        Map<String, String> map = UpploadPhoto.uploadB(file, request);
+        if (map.get("error") != null){
+            if (map.get("error").equals("sysUser/add")) {
+                return "sysUser/add";
+            }
+        }
+        if (map.get("idPicPath") != null){
+            sysUser.setIdPicPath(map.get("idPicPath"));
+        }
+        if (map.get("workPicPath") != null){
+            sysUser.setWorkPicpath(map.get("workPicPath"));
+        }
+        int add = sysUserMapper.add(sysUser);
+        if (add>0){
+            return "true";
+        }else {
+            request.setAttribute("error","添加失败");
+            return "sysUser/add";
+        }
     }
 }

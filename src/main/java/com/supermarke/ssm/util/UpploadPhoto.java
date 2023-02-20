@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -40,6 +39,8 @@ public class UpploadPhoto {
                     }
                     try {
                         idPic.transferTo(new File(file,finallyName));
+                        idPicPath=path+"/"+finallyName;
+                        workPicPath=path+"/"+finallyName;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -60,33 +61,5 @@ public class UpploadPhoto {
     }
 
 
-    /**
-     * 上传阿里云
-     * @param file
-     * @return
-     */
-//    public static String uploadA(MultipartFile file) {
-//        OSS client = new OSSClientBuilder().build(ConstantPropertiesUtils.END_POIND,ConstantPropertiesUtils.ACCESS_KEY_ID,ConstantPropertiesUtils.ACCESS_KEY_SECRET);
-//        try {
-//            InputStream inputStream = file.getInputStream();
-//            // 获取文件名称 01.jsp
-//            String fileName = file.getOriginalFilename();
-//            // 生成唯一的值，防止文件名重复  wdfehsosj01.jsp
-//            String uuId = UUID.randomUUID().toString().replaceAll("-", "");
-//            fileName = uuId + fileName;
-//
-//            // 按照日期进行分类 2022/12/29/wdfehsosj01.jsp
-//            String datePth = new DateTime().toString("yyyy/MM/dd");
-//            fileName = datePth+"/"+fileName;
-//
-//            String bucketName= ConstantPropertiesUtils.BUCKET_NAME.replaceAll(" ","");
-//            // 创建PutObjectRequest对象。
-//            client.putObject(bucketName, fileName, inputStream);
-//            // https://edu--peng.oss-cn-shanghai.aliyuncs.com/2022/12/29/wdfehsosj01.jsp
-//            String url = "https://"+bucketName+"."+ConstantPropertiesUtils.END_POIND+"/"+fileName;
-//            return url;
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 }

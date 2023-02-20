@@ -2,7 +2,9 @@ package com.supermarke.ssm.service;
 
 import com.github.pagehelper.PageInfo;
 import com.supermarke.ssm.pojo.SysUser;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface SysUserService {
@@ -31,5 +33,5 @@ public interface SysUserService {
 
     boolean delete(Integer id);
     SysUser getAccountChecked(String account);
-    void insert(SysUser sysUser);
+    String insert(SysUser sysUser, MultipartFile[] file, HttpServletRequest request);
 }

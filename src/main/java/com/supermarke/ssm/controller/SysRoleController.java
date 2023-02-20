@@ -5,10 +5,7 @@ import com.supermarke.ssm.pojo.SysUser;
 import com.supermarke.ssm.service.SysRoleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -48,6 +45,7 @@ public class SysRoleController {
     }
 
     @RequestMapping("/del/{id}")
+    @ResponseBody
     public Map<String, String> sysRoleDel(@PathVariable("id")Integer id){
         boolean flag = sysRoleService.delById(id);
         Map<String,String> map = new HashMap<>();
@@ -65,8 +63,22 @@ public class SysRoleController {
     }
 
     @RequestMapping("/codeExist")
-    public Integer codeExist(@RequestParam("code") Integer code){
-        return sysRoleService.checkCode(code);
+    @ResponseBody
+    public Map<String,Integer> codeExist(@RequestParam("code") Integer code){
+        Map<String,Integer> map = new HashMap<>();
+        try{
+            Integer integer = sysRoleService.checkCode(code);
+            if (integer>0){
+                map.put("exist",1);
+                return map;
+            }else {
+                map.put("exist",0);
+                return map;
+            }
+        }catch (Exception e){
+            map.put("exist",-1);
+            return map;
+        }
     }
 
     @RequestMapping("/add")

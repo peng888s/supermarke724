@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 <!--    扫描层组件-->
     <context:component-scan base-package="com.supermarke.ssm.controller"/>
-    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"></mvc:annotation-driven>
+    <mvc:annotation-driven conversion-service="conversionServiceFactoryBean" content-negotiation-manager="contentNegotiationManager"></mvc:annotation-driven>
     <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="favorParameter" value="true"></property>
         <property name="favorPathExtension" value="true"></property>
@@ -17,6 +17,17 @@
                 xml = application/xml
                 html = text/html
             </value>
+        </property>
+    </bean>
+
+<!--    数据转换器-->
+    <bean id="conversionServiceFactoryBean" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.supermarke.ssm.util.converter.String2DateConverter">
+                    <constructor-arg name="datePattern" type="java.lang.String" value="yyyy-MM-dd"/>
+                </bean>
+            </list>
         </property>
     </bean>
 
